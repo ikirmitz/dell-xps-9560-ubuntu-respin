@@ -15,9 +15,12 @@ COPY ./docker-entrypoint.sh /
 COPY ./build.sh /
 COPY ./wrapper-network.sh /
 COPY ./wrapper-nvidia.sh /
+COPY ./wrapper-gnome-extensions.sh /
+COPY ./gnome-extensions.txt /
 
 RUN chmod +x docker-entrypoint.sh
 RUN chmod +x build.sh
 RUN chmod +x wrapper-network.sh
 RUN chmod +x wrapper-nvidia.sh
+RUN chmod +x wrapper-gnome-extensions.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]

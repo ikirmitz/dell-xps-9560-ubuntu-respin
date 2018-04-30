@@ -4,7 +4,8 @@ ISOFILE=$1
 KERNEL=$2
 KERNELVERSION=$3
 
-KERNELARGS=" -u "
+# KERNELARGS=" -u "
+KERNELARGS=""
 
 # Parse ARGS
 POSITIONAL=()
@@ -14,11 +15,17 @@ key="$1"
 
 case $key in
     -k|--kernel)
-    echo "Setting kernel version..."
+    echo "Using latest mainline kernel..."
     KERNELVERSION="$2"
     KERNELARGS=" --kernel $KERNELVERSION "
     shift # past argument
     shift # past value
+    ;;
+    -l|--latest)
+    echo "Setting latest kernel version..."
+    KERNELARGS=" -u "
+    shift # past argument
+    # shift # past value
     ;;
     -c|--compatibility)
     echo "Setting compatibility..."
@@ -41,7 +48,7 @@ if [ ! -f isorespin.sh ]; then
 	wget -O isorespin.sh "https://drive.google.com/uc?export=download&id=0B99O3A0dDe67S053UE8zN3NwM2c"
 fi
 
-installpackages=""
+installpackages="gnome-tweak-tool guake "
 # Packages that will be installed:
 # Thermal management stuff and packages
 installpackages+="thermald "
@@ -73,12 +80,16 @@ installpackages+="vlc "
 
 chmod +x isorespin.sh
 
+echo "Kernel arguments used: $KERNELARGS"
+
 ./isorespin.sh -i $ISOFILE \
 	$KERNELARGS \
 	-r "ppa:graphics-drivers/ppa" \
 	-p "$installpackages" \
 	-f wrapper-network.sh \
 	-f wrapper-nvidia.sh \
+	-f gnome-extensions.txt \
+	-f wrapper-gnome-extensions.sh \
 	-c wrapper-network.sh \
 	-c wrapper-nvidia.sh \
 	-g "" \
